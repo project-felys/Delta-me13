@@ -1,0 +1,44 @@
+import os
+import subprocess
+from collections.abc import Mapping
+from pathlib import Path
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict
+
+from pipeline.api.out_trait import OutTrait
+from pipeline.api.sentence import Sentence
+
+VGMSTREAM = os.environ.get("VGMSTREAM", "vgmstream-cli")
+
+
+class Audio(BaseModel, OutTrait):
+    model_config = ConfigDict(frozen=True)
+
+    name: str
+    sentence: Sentence
+    wem_path: Path
+
+    @property
+    def num_tokens(self) -> int:
+        return self.sentence.num_tokens
+
+    def wem_to_wav_by_vgmstream(self, output_dir: Path) -> None:
+        wav_path = output_dir / f"{self.name}.wav"
+        if wav_path.exists():
+            return
+
+        assert VGMSTREAM is not None
+        assert output_dir.exists()
+        result = subprocess.run(
+            [VGMSTREAM, "-o", str(wav_path), str(self.wem_path)],
+            capture_output=True,
+        )
+        assert result.returncode == 0
+
+    def to_jsonl(self, **_: Any) -> Mapping[str, Any]:
+        return {
+            "name": self.name,
+            "hash": self.sentence.text_hash,
+            "text": self.sentence.pretty_string,
+        }
