@@ -39,6 +39,5 @@ class Audio(BaseModel, OutTrait):
     def to_jsonl(self, **_: Any) -> Mapping[str, Any]:
         return {
             "name": self.name,
-            "hash": self.sentence.text_hash,
             "text": self.sentence.pretty_string,
         }

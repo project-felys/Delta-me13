@@ -1,5 +1,4 @@
 import itertools
-import json
 import os
 import re
 from collections.abc import Iterator
@@ -56,9 +55,6 @@ def cyrene(
     )
 
     factory = TtsFactory(unpacked_audio_language_dir, turn_based_game_data_dir)
-    merge_data = factory.compute_talk_sentence_config_merged_text_hash(voice_path_regex)
-    with open(output_dir / f"{language}.json", "w") as file:
-        json.dump(merge_data, file, indent=2)
 
     iterable = itertools.chain(
         factory.build_talk_sentence_config(voice_path_regex),
