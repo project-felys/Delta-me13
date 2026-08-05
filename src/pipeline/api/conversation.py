@@ -43,12 +43,13 @@ class Round(BaseModel):
             ),
         )
 
-    def to_jsonl(self) -> Iterator[Mapping[str, str]]:
+    def to_user_jsonl(self) -> Mapping[str, str]:
         user_content = "\n".join(s.pretty_string for s in self.user)
-        if user_content:
-            yield {"role": "user", "content": user_content}
+        return {"role": "user", "content": user_content}
+
+    def to_assistant_jsonl(self) -> Mapping[str, str]:
         assistant_content = "\n".join(s.pretty_string for s in self.assistant)
-        yield {"role": "assistant", "content": assistant_content}
+        return {"role": "assistant", "content": assistant_content}
 
 
 class Conversation(BaseModel, OutTrait):
@@ -96,5 +97,7 @@ class Conversation(BaseModel, OutTrait):
         if use_system:
             name = self.rounds[0].assistant[0].pretty_name
             messages.append({"role": "system", "content": name})
-        messages.extend(line for round in self.rounds for line in round.to_jsonl())
+        for round in self.rounds:
+            messages.append(round.to_user_jsonl())
+            messages.append(round.to_assistant_jsonl())
         return {"messages": messages}

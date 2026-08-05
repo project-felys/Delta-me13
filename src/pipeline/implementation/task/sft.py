@@ -147,5 +147,5 @@ def cyrene(
     iterable = __clip_conversations(iterable, 10)
     iterable = __filter_conversations(iterable, 8192)
     return emit(
-        iterable, output_dir / f"{language}.jsonl", f"{language:>3}", use_system=False
+        iterable, output_dir / f"{language}.jsonl", f"{language:>3}", use_system=True
     )

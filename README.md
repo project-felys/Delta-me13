@@ -1,6 +1,6 @@
 # δ-me13
 
-δ-me13 generates text and audio datasets for Cyrene, and can be extended to a wider range of applications. Feel free to [chat](https://felys.dev/en/chat) with Cyrene or hear her [voice](https://felys.dev/en/voice).
+δ-me13 generates text and audio datasets for Cyrene, and can be extended to support a wider range of characters. Feel free to [chat](https://felys.dev/en/chat) with Cyrene or hear her [voice](https://felys.dev/en/voice).
 
 **Note: this project does not contain any game assets, nor does it reverse engineer any encrypted files.**
 

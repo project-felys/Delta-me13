@@ -96,10 +96,8 @@ class TurnBasedGameDataLoader:
 
     @functools.cached_property
     def __text_map(self) -> Mapping[int, str]:
-        text_map_path = (
-            self.__turn_based_game_data_text_map
-            / f"TextMap{self.__turn_based_game_data_language}.json"
-        )
+        language = self.__turn_based_game_data_language.upper()
+        text_map_path = self.__turn_based_game_data_text_map / f"TextMap{language}.json"
 
         if text_map_path.exists():
             with open(text_map_path) as f:
@@ -110,8 +108,7 @@ class TurnBasedGameDataLoader:
         i = 0
         while True:
             partial_path = (
-                self.__turn_based_game_data_text_map
-                / f"TextMap{self.__turn_based_game_data_language}_{i}.json"
+                self.__turn_based_game_data_text_map / f"TextMap{language}_{i}.json"
             )
             if not partial_path.exists():
                 break

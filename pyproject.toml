@@ -15,7 +15,9 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "ipykernel>=7.3.0",
     "ruff>=0.16.0",
+    "seaborn>=0.13.2",
 ]
 
 [project.scripts]
