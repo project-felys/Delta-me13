@@ -22,5 +22,7 @@ dist/
 vgmstream-cli
 
 # Generated project artifacts
-corpora/
 audio/
+corpora/**
+!corpora/**/
+!corpora/**/*.json

@@ -13,7 +13,7 @@ def to_jsonl(
 ) -> Iterator[OutTrait]:
     for each in iterable:
         line = each.to_jsonl(**kwargs)
-        json.dump(line, f, ensure_ascii=False, default=str)
+        json.dump(line, f, ensure_ascii=False)
         print(file=f)
         yield each
 

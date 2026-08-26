@@ -12,6 +12,6 @@ def load_patch_file(input_path: Path) -> Mapping[str, str]:
     return hash_to_text_map
 
 
-def load_patch(name: str) -> Mapping[str, str]:
-    input_path = Path(__file__).parent / "tts" / f"{name}.jsonl"
+def load_patch(character: str, language: str) -> Mapping[str, str]:
+    input_path = Path(__file__).parent / "tts" / character / f"{language}.jsonl"
     return load_patch_file(input_path) if input_path.exists() else {}

@@ -7,7 +7,7 @@ from pathlib import Path
 
 os.environ["TRANSFORMERS_VERBOSITY"] = "error"
 
-from pipeline.implementation.task import pt, sft, tts
+from pipeline.implementation.task import pt, sft, textonly, tts
 
 TEXT_LANGUAGES = [
     "chs",
@@ -41,7 +41,7 @@ def __dump_name_metrics(
     named_metrics: Mapping[str, list[int]], output_path: Path
 ) -> None:
     with open(output_path, "w+") as f:
-        json.dump(named_metrics, f)
+        json.dump(named_metrics, f, indent=2)
 
     num_tokens = sum(sum(x) for x in named_metrics.values())
     print(f"Estimated number of tokens: {num_tokens}")
@@ -125,12 +125,22 @@ def main() -> None:
     )
     multilingual.add_argument(
         "--namespace",
-        choices=["pt", "sft"],
+        choices=["pt", "sft", "textonly"],
         required=True,
     )
     multilingual.add_argument(
         "--dataset",
-        choices=["everything", "amphoreus", "cyrene"],
+        choices=[
+            "everything",
+            "amphoreus",
+            "cyrene",
+            "aglaea",
+            "cipher",
+            "castorice",
+            "hyacine",
+            "hysilens",
+            "cerydra",
+        ],
         required=True,
     )
     multilingual.add_argument(
@@ -159,7 +169,15 @@ def main() -> None:
     )
     audio.add_argument(
         "--dataset",
-        choices=["cyrene"],
+        choices=[
+            "cyrene",
+            "aglaea",
+            "hysilens",
+            "hyacine",
+            "castorice",
+            "cipher",
+            "cerydra",
+        ],
         required=True,
     )
     audio.add_argument(
@@ -183,6 +201,20 @@ def main() -> None:
                     __multilingual(args, sft.amphoreus)
                 case "sft", "cyrene":
                     __multilingual(args, sft.cyrene)
+                case "textonly", "aglaea":
+                    __multilingual(args, textonly.aglaea)
+                case "textonly", "cyrene":
+                    __multilingual(args, textonly.cyrene)
+                case "textonly", "cipher":
+                    __multilingual(args, textonly.cipher)
+                case "textonly", "castorice":
+                    __multilingual(args, textonly.castorice)
+                case "textonly", "hyacine":
+                    __multilingual(args, textonly.hyacine)
+                case "textonly", "hysilens":
+                    __multilingual(args, textonly.hysilens)
+                case "textonly", "cerydra":
+                    __multilingual(args, textonly.cerydra)
                 case _:
                     parser.error(f"Unsupported: {args.namespace} {args.dataset}")
         case "vendor":
@@ -191,6 +223,18 @@ def main() -> None:
             match args.dataset:
                 case "cyrene":
                     __audio(args, tts.cyrene)
+                case "aglaea":
+                    __audio(args, tts.aglaea)
+                case "hysilens":
+                    __audio(args, tts.hysilens)
+                case "hyacine":
+                    __audio(args, tts.hyacine)
+                case "castorice":
+                    __audio(args, tts.castorice)
+                case "cipher":
+                    __audio(args, tts.cipher)
+                case "cerydra":
+                    __audio(args, tts.cerydra)
                 case _:
                     parser.error(f"Unsupported: {args.dataset}")
         case _:

@@ -159,14 +159,11 @@ class TurnBasedGameDataLoader:
         key = int(match.group(1))
         return self.__text_join_id_to_text.get(key, match.group(0))
 
-    def __join_text(self, s: str) -> str:
-        s = self.__text_join_pattern.sub(self.__replace_text_join, s)
-        s = s.replace("\\n", "\n")
-        return s
-
     def get_text_unwrap(self, key: int):
         self.__visited_textmap_keys_set.add(key)
-        return self.__text_map[key]
+        s = self.__text_map[key]
+        s = s.replace("\\n", "\n")
+        return s
 
     def get_joined_text(self, key: int, default: Any):
         try:
@@ -175,8 +172,9 @@ class TurnBasedGameDataLoader:
             return default
 
     def get_joined_text_unwrap(self, key: int):
-        raw_text = self.get_text_unwrap(key)
-        return self.__join_text(raw_text)
+        s = self.get_text_unwrap(key)
+        s = self.__text_join_pattern.sub(self.__replace_text_join, s)
+        return s
 
     @functools.cached_property
     def __book_series_config(self) -> list[Mapping[str, Any]]:
@@ -337,19 +335,31 @@ class TurnBasedGameDataLoader:
         return df
 
     @functools.cached_property
-    def __none_atlas(self) -> list[Mapping[str, Any]]:
+    def tarot_book_voice_table(self) -> pd.DataFrame:
+        df = pd.DataFrame(
+            data=(
+                (entry["Sentence"]["Hash"], entry["VoiceID"])
+                for entry in self.__tarot_book_sentence
+            ),
+            columns=["sentence_hash", "voice_id"],
+        )
+        df.values.flags.writeable = False
+        return df
+
+    @functools.cached_property
+    def __noun_atlas(self) -> list[Mapping[str, Any]]:
         with open(self.__turn_based_game_data_excel_output / "NounAtlas.json") as f:
             return json.load(f)
 
     @functools.cached_property
-    def none_atlas_table(self) -> pd.DataFrame:
+    def noun_atlas_table(self) -> pd.DataFrame:
         df = pd.DataFrame(
             data=(
                 (
                     config["NounTitle"]["Hash"],
                     config["NounDesc"]["Hash"],
                 )
-                for config in self.__none_atlas
+                for config in self.__noun_atlas
             ),
             columns=[
                 "noun_title_hash",

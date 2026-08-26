@@ -5,12 +5,8 @@ from pathlib import Path
 from pipeline.api.conversation import Conversation
 from pipeline.api.sentence import Sentence
 from pipeline.factories.sft import SftFactory
-from pipeline.implementation.auto_format import (
-    get_cyrene_whitelist_auto_format,
-)
-from pipeline.implementation.match_sub import get_felysneko_match_sub
+from pipeline.implementation import auto_format, match_sub, token_counter
 from pipeline.implementation.task.out_trait import emit
-from pipeline.implementation.token_counter import get_qwen3_token_counter
 
 
 def __clip_conversations(
@@ -41,8 +37,8 @@ def everything(
 ) -> list[int]:
     Sentence.global_config(
         auto_format=None,
-        token_counter=get_qwen3_token_counter(),
-        match_sub=get_felysneko_match_sub(language),
+        token_counter=token_counter.get_qwen3(),
+        match_sub=match_sub.get_felysneko_all_fixed(language),
     )
 
     factory = SftFactory(turn_based_game_data_dir, language)
@@ -70,8 +66,8 @@ def amphoreus(
 ) -> list[int]:
     Sentence.global_config(
         auto_format=None,
-        token_counter=get_qwen3_token_counter(),
-        match_sub=get_felysneko_match_sub(language),
+        token_counter=token_counter.get_qwen3(),
+        match_sub=match_sub.get_felysneko_all_fixed(language),
     )
 
     avatar_id_to_name_hash = {
@@ -116,9 +112,9 @@ def cyrene(
     output_dir: Path, turn_based_game_data_dir: Path, language: str
 ) -> list[int]:
     Sentence.global_config(
-        auto_format=get_cyrene_whitelist_auto_format(language),
-        token_counter=get_qwen3_token_counter(),
-        match_sub=get_felysneko_match_sub(language),
+        auto_format=auto_format.get_cyrene_whitelist(language),
+        token_counter=token_counter.get_qwen3(),
+        match_sub=match_sub.get_felysneko_all_fixed(language),
     )
 
     name_hashes = [

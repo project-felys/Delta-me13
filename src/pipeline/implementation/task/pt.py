@@ -6,15 +6,8 @@ from pipeline.api.paragraph import Paragraph
 from pipeline.api.sentence import Sentence
 from pipeline.factories.pt import PtFactory
 from pipeline.factories.vendor import VendorFactory
-from pipeline.implementation.auto_format import (
-    get_retain_sentence_name_auto_format,
-)
-from pipeline.implementation.match_sub import (
-    get_fast_felysneko_match_sub,
-    get_felysneko_match_sub,
-)
+from pipeline.implementation import auto_format, match_sub, token_counter
 from pipeline.implementation.task.out_trait import emit
-from pipeline.implementation.token_counter import get_qwen3_token_counter
 
 
 def __split_paragraphs(
@@ -28,9 +21,9 @@ def everything(
     output_dir: Path, turn_based_game_data_dir: Path, language: str
 ) -> list[int]:
     Sentence.global_config(
-        auto_format=get_retain_sentence_name_auto_format(language),
-        token_counter=get_qwen3_token_counter(),
-        match_sub=get_felysneko_match_sub(language),
+        auto_format=auto_format.get_retain_sentence_name(language),
+        token_counter=token_counter.get_qwen3(),
+        match_sub=match_sub.get_felysneko_all_fixed(language),
     )
 
     factory = PtFactory(turn_based_game_data_dir, language)
@@ -53,9 +46,9 @@ def amphoreus(
     output_dir: Path, turn_based_game_data_dir: Path, language: str
 ) -> list[int]:
     Sentence.global_config(
-        auto_format=get_retain_sentence_name_auto_format(language),
-        token_counter=get_qwen3_token_counter(),
-        match_sub=get_felysneko_match_sub(language),
+        auto_format=auto_format.get_retain_sentence_name(language),
+        token_counter=token_counter.get_qwen3(),
+        match_sub=match_sub.get_felysneko_all_fixed(language),
     )
 
     avatar_id_to_name_hash = {
@@ -109,8 +102,8 @@ def amphoreus(
 def vendor(output_dir: Path, vendor_dir: Path):
     Sentence.global_config(
         auto_format=None,
-        token_counter=get_qwen3_token_counter(),
-        match_sub=get_fast_felysneko_match_sub(),
+        token_counter=token_counter.get_qwen3(),
+        match_sub=match_sub.get_felysneko_only(),
     )
 
     factory = VendorFactory(vendor_dir)

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import tqdm
 
-from pck import PckExtractor
+from pck.api import PckExtractor
 
 
 def main() -> None:

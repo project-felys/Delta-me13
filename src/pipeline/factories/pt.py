@@ -130,7 +130,7 @@ class PtFactory(TurnBasedGameDataLoader):
         for (
             noun_title_hash,
             noun_desc_hash,
-        ) in self.none_atlas_table.itertuples(index=False):
+        ) in self.noun_atlas_table.itertuples(index=False):
             content = self.get_joined_text_unwrap(noun_desc_hash)
             lines = itertools.chain(
                 [self.get_joined_text_unwrap(noun_title_hash)],

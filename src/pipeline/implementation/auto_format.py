@@ -4,7 +4,7 @@ from pipeline.api.sentence import Sentence
 from pipeline.patch.tts import load_patch
 
 
-def get_retain_sentence_name_auto_format(
+def get_retain_sentence_name(
     language: str,
 ) -> Callable[[Sentence], str]:
     colon = ": "
@@ -21,7 +21,7 @@ def get_retain_sentence_name_auto_format(
     return retain_sentence_name
 
 
-def get_cyrene_whitelist_auto_format(language: str) -> Callable[[Sentence], str]:
+def get_cyrene_whitelist(language: str) -> Callable[[Sentence], str]:
     lparen = "("
     rparen = ")"
     if language.lower() in ["chs", "cht"]:
@@ -56,8 +56,8 @@ def get_cyrene_whitelist_auto_format(language: str) -> Callable[[Sentence], str]
     return cyrene_whitelist
 
 
-def get_patch_auto_format(language: str) -> Callable[[Sentence], str]:
-    patch_mapping = load_patch(language)
+def get_patch(character: str, language: str) -> Callable[[Sentence], str]:
+    patch_mapping = load_patch(character, language)
 
     def patch(sentence: Sentence) -> str:
         return patch_mapping.get(sentence.text_hash, sentence.text)

@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from pck import PckHeader
+from pck.api import PckHeader
 
 
 class UnpackedAudioLanguageLoader:

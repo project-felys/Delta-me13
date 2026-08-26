@@ -113,6 +113,17 @@ class TtsFactory(UnpackedAudioLanguageLoader, TurnBasedGameDataLoader):
             df[["talk_sentence_text", "voice_id"]].itertuples(index=False)
         )
 
+    def build_tarot_book_sentence(self, voice_path_regex: Pattern) -> Iterator[Audio]:
+        voice_id_set = self.compute_voice_id_set(voice_path_regex)
+
+        df = self.tarot_book_voice_table
+        mask = df["voice_id"].isin(voice_id_set)
+        df = df[mask]
+
+        yield from self.__process_didx_data(
+            df[["sentence_hash", "voice_id"]].itertuples(index=False)
+        )
+
     def build_voice_atlas(self, avatar_id: int) -> Iterator[Audio]:
         df = self.voice_atlas_table
         mask = df["avatar_id"] == avatar_id
